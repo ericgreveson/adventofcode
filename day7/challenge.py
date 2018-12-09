@@ -1,5 +1,3 @@
-import numpy as np
-
 from aoc.challenge_base import ChallengeBase
 
 class Challenge(ChallengeBase):
