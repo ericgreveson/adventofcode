@@ -18,9 +18,13 @@ def main(argv):
     day_challenge = day_module.Challenge()
 
     # Load input data for this day, should be in day1/input.txt, etc
+    # If not, no worries, maybe there's no input file
     input_file = os.path.join(day_name, "input.txt")
     print(f"Loading input from {input_file}...")
-    day_challenge.load_input(input_file)
+    try:
+        day_challenge.load_input(input_file)
+    except FileNotFoundError:
+        print(f"No input file found.")
     
     print("Challenge 1 executing...")
     day_challenge.challenge1()
