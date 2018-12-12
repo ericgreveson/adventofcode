@@ -18,7 +18,7 @@ class Challenge(ChallengeBase):
 
     def challenge1(self):
         """
-        Day 10 challenge 1
+        Day 11 challenge 1
         """
         # Compute power levels
         self.grid = np.zeros((300,300), dtype=np.int32)
