@@ -21,11 +21,12 @@ class Emulator:
     """
     Emulator for the wrist device
     """
-    def __init__(self):
+    def __init__(self, num_registers):
         """
         Constructor
+        num_registers: Number of registers for the emulator
         """
-        self.registers = [0, 0, 0, 0]
+        self.registers = [0] * num_registers
         self.dispatch_table = {
             "addr": self.addr,
             "addi": self.addi,
@@ -49,7 +50,7 @@ class Emulator:
         """
         Copy new_state into the registers
         """
-        for i in range(4):
+        for i in range(len(self.registers)):
             self.registers[i] = new_state[i]
 
     def addr(self, a, b, c):
@@ -192,7 +193,7 @@ class Challenge(ChallengeBase):
         self.parse_input()
 
         samples_with_three_or_more = []
-        emulator = Emulator()
+        emulator = Emulator(4)
         self.possible_opcodes = {i: {opcode for opcode in emulator.dispatch_table.keys()} for i in range(16)}
         for sample in self.samples:
             # Try all opcodes and see if they work
