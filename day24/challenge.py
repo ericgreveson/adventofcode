@@ -35,6 +35,12 @@ class CombatGroup:
         """
         return self.units * self.attack
 
+class StalemateError(RuntimeError):
+    """
+    Exception to raise when no units are killed in a combat round
+    """
+    pass
+
 class Challenge(ChallengeBase):
     """
     Day 24 challenges
@@ -116,14 +122,21 @@ class Challenge(ChallengeBase):
                 if top_priority[0] > 0:
                     targets[attacker] = top_priority[-1]
 
-        # Attacking phase
+        # Attacking phase. For challenge pt 2, we need to check if anything was killed, too!
+        killed_something = False
         for attacker in sorted(self.groups, key=lambda g: g.initiative, reverse=True):
             # Check it selected a target and isn't dead yet
             if attacker in targets.keys() and attacker.units >= 0:
                 defender = targets[attacker]
                 damage_to_deal = self.compute_potential_damage(attacker, defender)
-                defender.units -= damage_to_deal // defender.hp
-                
+                units_to_kill = damage_to_deal // defender.hp
+                if units_to_kill:
+                    killed_something = True
+                    defender.units -= units_to_kill
+        
+        if not killed_something:
+            raise StalemateError()
+
         # Bring out yer dead!
         self.groups = list(filter(lambda g: g.units >= 0, self.groups))
 
@@ -131,11 +144,10 @@ class Challenge(ChallengeBase):
         """
         Day 24 challenge 1
         """
-        #self.set_up_armies()
         self.set_up_armies()
 
         # Run combat rounds until no groups from one side remain
-        while [g for g in self.groups if g.side == 0] and [g for g in self.groups if g.side == 1]:
+        while len({g.side for g in self.groups}) > 1:
             self.run_combat_round()
 
         print(f"Remaining units in winning army: {reduce(lambda x, cg: x + cg.units, self.groups, 0)}")
@@ -144,4 +156,26 @@ class Challenge(ChallengeBase):
         """
         Day 24 challenge 2
         """
-        pass
+        # Try different boost levels...
+        for boost in range(1000):
+            self.set_up_armies()
+
+            # Boost the immune system groups
+            for g in self.groups:
+                if g.side == 0:
+                    g.attack += boost
+
+            # Run combat
+            try:
+                while len({g.side for g in self.groups}) > 1:
+                    self.run_combat_round()
+            except StalemateError:
+                print(f"Boost {boost}: stalemate.")
+                continue
+
+            # Did the immune system win?
+            if 0 in {g.side for g in self.groups}:
+                print(f"Boost {boost}: Reindeer won! {reduce(lambda x, cg: x + cg.units, self.groups, 0)} units left.")
+                break
+            else:
+                print(f"Boost {boost}: Infection won :-(")
