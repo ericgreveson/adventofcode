@@ -37,7 +37,7 @@ end
 
 you_nodes = get_ancestors(tree, "YOU")
 santa_nodes = get_ancestors(tree, "SAN")
-non_common_nodes = symdiff(map(n -> n.name, reverse(you_nodes)), map(n -> n.name, santa_nodes))
+non_common_nodes = symdiff(reverse(you_nodes), santa_nodes)
 print("Transfers: $(length(non_common_nodes) - 2)")
 
 end
