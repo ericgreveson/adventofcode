@@ -2,8 +2,7 @@
 has_double_digit(ds) = any([ds[i] == ds[i+1] for i in 1:5])
 never_decreasing(ds) = all([ds[i] >= ds[i+1] for i in 1:5])
 valid_password(ds) = has_double_digit(ds) && never_decreasing(ds)
-puzzle_range = 165432:707912
-passwords = [password for password in puzzle_range if valid_password(digits(password))]
+passwords = filter(x -> valid_password(digits(x)), 165432:707912)
 println("Part 1: Number of possible passwords: $(length(passwords))")
 
 # Part 2: now we need at least one group of 2 adjacent digits to not be part of larger group
