@@ -5,4 +5,4 @@ println("count(1) * count(2) = $(sum(layer .== 1) * sum(layer .== 2))")
 
 # Part 2: Collapse layers, 0 is black, 1 is white, 2 is transparent, first layer is top
 rendered = mapslices(x -> first(filter(!isequal(2), x)), image, dims=[3])[:, :, 1]
-println.([join(map(x -> x == 1 ? "█" : " ", col)) for col in eachcol(rendered)])
+println.(join.(eachrow(map(x -> x == 1 ? "█" : " ", rendered'))))
