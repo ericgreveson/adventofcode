@@ -28,6 +28,5 @@ println("Max detected asteroids: $(maximum(visible_counts))")
 # We actually have >200 detected, so we need less than one rotation. Sort detected by angle.
 coord = argmax(visible_counts)
 detected = visible_asteroids_at_coord(grid, coord)
-items = sort(map(x -> (π - atan(reverse((x - coord).I)...), x), filter(x -> detected[x], CartesianIndices(detected))))
-item200 = items[200]
-println("200th to be vaporized: $item200, checksum: $((item200[2][2] - 1) * 100 + item200[2][1] - 1))")
+item = sort(map(x -> (π - atan(reverse((x - coord).I)...), x), filter(x -> detected[x], CartesianIndices(detected))))[200]
+println("200th to be vaporized: $item, checksum: $((item[2][2] - 1) * 100 + item[2][1] - 1))")
