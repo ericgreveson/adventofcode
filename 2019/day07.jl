@@ -12,12 +12,11 @@ end
 
 """Compute the thruster signal in feedback mode after all programs halt"""
 function feedback_signal(prog, phase_settings)
-    io_channels = [Channel(400000) for i in 1:5]
+    io_channels = [Channel(4) for i in 1:5]
     for (io_channel, phase_setting) in zip(io_channels, phase_settings) put!(io_channel, phase_setting) end
     put!(first(io_channels), 0)
     @sync for i in 1:5
-        @async run_intcode!(copy(prog), [io_channels[i], io_channels[i%5 + 1]])
-        println("Done $i")
+        @async run_intcode!(copy(prog), io_channels[i], io_channels[i%5 + 1])
     end
     return take!(first(io_channels))
 end
