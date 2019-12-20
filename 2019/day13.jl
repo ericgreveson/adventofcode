@@ -41,9 +41,7 @@ try
                 score = cmd[3]
             else
                 drawn_tiles[(cmd[1], cmd[2])] = cmd[3]
-                if cmd[3] == 3
-                    paddle_x = cmd[1]
-                end
+                if cmd[3] == 3 paddle_x = cmd[1] end
                 if cmd[3] == 4 ball_x = cmd[1] end
             end
         end
