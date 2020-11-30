@@ -22,7 +22,8 @@ ops = Dict(
     6 => ((p, state::IntcodeState) -> (state.pc = p[1] == 0 ? (p[2] + 1) : state.pc + 3; nothing), 2, 0),   # jump if zero
     7 => ((p, state::IntcodeState) -> (state.pc += 4; p[1] < p[2] ? 1 : 0), 2, 1),                          # less than
     8 => ((p, state::IntcodeState) -> (state.pc += 4; p[1] == p[2] ? 1 : 0), 2, 1),                         # equals
-    9 => ((p, state::IntcodeState) -> (state.pc += 2; state.relative_base += p[1]), 1, 0)                   # adjust relative base
+    9 => ((p, state::IntcodeState) -> (state.pc += 2; state.relative_base += p[1]), 1, 0),                  # adjust relative base
+    99 => ((p, state::IntcodeState) -> (state.pc += 1), 0, 0)                                               # exit
 )
 
 """Read a param using the appropriate mode"""
@@ -81,4 +82,62 @@ function run_intcode!(prog, input_array::Array)::Array
         end
     end
     return output_array
+end
+
+"""Give a human-friendly disassembly of the program"""
+function disassemble(prog)::Array{String,1}
+    pc = 1
+    asm = Dict(
+        1 => "ADD  ",
+        2 => "MUL  ",
+        3 => "READ ",
+        4 => "WRITE",
+        5 => "JMPNZ",
+        6 => "JMPZ ",
+        7 => "LESS ",
+        8 => "EQUAL",
+        9 => "ADJRB",
+        99 => "EXIT "
+    )
+
+    disassembled = Array{String,1}()
+    data_segment = false
+    while pc <= length(prog)
+        opcode, modes = decode_instruction(prog[pc])
+        num_params, num_results = 0, 0
+        if opcode ∈ keys(ops)
+            op_func, num_params, num_results = ops[opcode]
+        else
+            data_segment = true
+        end
+        
+        if data_segment
+            push!(disassembled, "DATA($opcode)")
+            pc += 1
+            continue
+        end
+
+        cmd = "$(asm[opcode])"
+        for i in 1:num_params
+            param = prog[pc + i]
+            if modes[i] == 0
+                cmd *= " LOAD($param)"
+            elseif modes[i] == 1
+                cmd *= " $param"
+            elseif modes[i] == 2
+                cmd *= " LOADREL($param)"
+            end
+        end
+        for i in 1:num_results
+            param = prog[pc + i + num_params]
+            if modes[i] == 0
+                cmd *= " STORE($param)"
+            elseif modes[i] == 2
+                cmd *= " STOREREL($param)"
+            end
+        end
+        push!(disassembled, cmd)
+        pc += num_params + num_results + 1
+    end
+    return disassembled
 end
