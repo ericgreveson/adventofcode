@@ -8,8 +8,8 @@ struct Policy
 end
 
 function parse(::Type{Policy}, x)
-    ps = split(x, ('-', ' '))
-    Policy(parse(Int32, ps[1]), parse(Int32, ps[2]), first(ps[3]))
+    min, max, char = split(x, ('-', ' '))
+    Policy(parse(Int32, min), parse(Int32, max), first(char))
 end
 
 # Load input
