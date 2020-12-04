@@ -20,5 +20,5 @@ validators = [
     p -> p["ecl"] in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"],
     p -> !isnothing(match(r"^\d{9}$", p["pid"]))
 ]
-is_valid(p) = issubset(required, keys(p)) && all([v(p) for v in validators])
+is_valid(p) = issubset(required, keys(p)) && all(map(v -> v(p), validators))
 println("Part 2: There are $(sum(is_valid.(passports))) valid passports")
