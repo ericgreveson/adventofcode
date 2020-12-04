@@ -9,7 +9,7 @@ end
 
 function parse(::Type{Policy}, x)
     min, max, char = split(x, ('-', ' '))
-    Policy(parse(Int32, min), parse(Int32, max), first(char))
+    Policy(parse(Int32, min), parse(Int32, max), only(char))
 end
 
 # Load input
