@@ -1,4 +1,4 @@
-# Part 1 - parse passports
+# Part 1
 answers = split.(split(read("day06_input.txt", String), "\n\n"))
 any_count(group) = length(∪(Set.(group)...))
 println("Part 1: ∑(counts) = $(sum(any_count.(answers)))")
