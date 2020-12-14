@@ -1,3 +1,5 @@
+using Combinatorics
+
 # Part 1
 data = parse.(Int64, readlines("day09_input.txt"))
 valid = [d ∈ Set(sum.(combinations(data[i-25:i-1], 2))) for (i, d) in enumerate(data) if i > 25]
