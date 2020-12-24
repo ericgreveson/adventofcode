@@ -1,4 +1,4 @@
-module day22
+module day23
 
 using LinkedLists
 
