@@ -35,11 +35,11 @@ print(f"Part 1: {sum_parts}")
 def find_adjacent_parts(lines, x, y):
     """Find all adjacent part numbers to the char at line x, column y"""
     parts = []
-    search_lines = [lines[i]]
+    search_lines = [lines[x]]
     if i > 0:
-        search_lines.append(lines[i-1])
+        search_lines.append(lines[x-1])
     if i < len(lines) - 1:
-        search_lines.append(lines[i+1])
+        search_lines.append(lines[x+1])
         
     for line in search_lines:
         for match in part_re.finditer(line):
