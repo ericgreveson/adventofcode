@@ -14,12 +14,8 @@ with open("day04_input.txt") as f:
         scratchcards.append(Scratchcard(winners, numbers))
     
 # Part 1
-total_points: int = 0
 match_counts = [len(s.numbers.intersection(s.winners)) for s in scratchcards]
-for match_count in match_counts:
-    if match_count > 0:
-        total_points += 2 ** (match_count - 1)
-        
+total_points = sum([2 ** (m - 1) for m in match_counts if m > 0])        
 print(f"Part 1: {total_points}")
 
 # Part 2
