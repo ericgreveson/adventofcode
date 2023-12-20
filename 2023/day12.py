@@ -1,4 +1,3 @@
-import functools
 import re
 
 record_groups = []
@@ -10,8 +9,7 @@ with open("day12_input.txt") as f:
 def is_ok(record, groups):
     """Is a particular arrangement acceptable according to the groups?"""
     runs = record.split(".")
-    
-@functools.cache
+
 def num_arrangements(record, groups):
     """Compute the number of arrangements of springs for a record"""
     valid_re = re.compile("[\.\?]*" + "[\.\?]+".join([f"[#\?]{{{g}}}" for g in groups]) + "[\.\?]*")
@@ -28,6 +26,4 @@ def num_arrangements(record, groups):
 
 print(f"Part 1: {sum([num_arrangements(r, g) for r, g in record_groups])}")
 
-record_groups = [("?".join([r]*5), g*5) for r, g in record_groups]
-print(f"{record_groups[0]}")
-print(f"Part 2: {sum([num_arrangements(r, g) for r, g in record_groups])}")
+print(f"Part 2: {sum([num_arrangements('?'.join([r]*5), g*5) for r, g in record_groups])}")
