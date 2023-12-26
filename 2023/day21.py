@@ -5,10 +5,6 @@ with open("day21_input.txt") as f:
     
 directions = [np.asarray(x) for x in [(0, 1), (0, -1), (1, 0), (-1, 0)]]
 
-def in_map(curr_plots, idx):
-    return not (idx[0] < 0 or idx[0] >= curr_plots.shape[0] or
-                idx[1] < 0 or idx[1] >= curr_plots.shape[1])
-    
 def take_step(curr_plots):
     next_plots = np.copy(curr_plots)
     next_plots[next_plots == 2] = 0
@@ -16,7 +12,7 @@ def take_step(curr_plots):
         if curr_plots[idx] == 2:
             for direction in directions:
                 neighbour = tuple(idx + direction)
-                if in_map(next_plots, neighbour) and next_plots[neighbour] == 0:
+                if next_plots[neighbour] == 0:
                     next_plots[neighbour] = 2
                     
     return next_plots
